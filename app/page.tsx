@@ -19,7 +19,7 @@ const PRODUCTS: Product[] = [
 ]
 
 export default function Page() {
-const [mobileOpen, setMobileOpen] = useState<boolean>(false)
+const [mobileOpen, setMobileOpen] = useState(false)
   const [selected, setSelected] = useState<Product | null>(null)
 
   // reveal on scroll
@@ -202,7 +202,7 @@ function useScrollReveal() {
 }
 
 /* Header */
-function Header({ mobileOpen, setMobileOpen }: { mobileOpen: boolean; setMobileOpen: (s: boolean) => void }) {
+function Header({ mobileOpen, setMobileOpen }: { mobileOpen: boolean; setMobileOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md bg-[rgba(10,6,12,0.35)] border-b border-white/6">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 py-3 flex items-center justify-between gap-4">
@@ -227,9 +227,15 @@ function Header({ mobileOpen, setMobileOpen }: { mobileOpen: boolean; setMobileO
         </div>
 
         <div className="md:hidden">
-<button onClick={() => setMobileOpen((s) => !s)} aria-label="Toggle menu" className="p-2 rounded-md bg-white/6">
+<button
+  onClick={() => setMobileOpen((prev: boolean) => !prev)}
+  aria-label="Toggle menu"
+  className="p-2 rounded-md bg-white/6"
+>
   <MenuIcon />
 </button>
+
+
         </div>
       </div>
       {/* mobile (kept simple) */}
@@ -248,6 +254,7 @@ function TiltCard({ children, className = '' }: { children: React.ReactNode; cla
     let px = 0, py = 0, tx = 0, ty = 0
 
     function handleMove(e: PointerEvent) {
+      if (!el) return
       const rect = el.getBoundingClientRect()
       const x = (e.clientX - rect.left) / rect.width - 0.5
       const y = (e.clientY - rect.top) / rect.height - 0.5
